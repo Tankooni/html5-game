@@ -47,9 +47,17 @@ function Rectangle(xIn, yIn, widthIn, heightIn)
     }
     this.IntersectsCircle = function(circle)
     {
+        var distance;
         for(var i = this.x; i < this.x + this.width; i++)
         {
-            
+            for(var j = this.y; j < this.y + this.height; j++)
+            {
+                distance = Math.sqrt(((circle.x - i) * (circle.x - i)) + ((circle.y - j) * (circle.y - j)));
+                if(distance <= circle.radius)
+                {
+                    return true;
+                }
+            }
         }
         return false;
     }
