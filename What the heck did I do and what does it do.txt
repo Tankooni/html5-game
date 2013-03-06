@@ -1,0 +1,20 @@
+I've put together a super simple game structure to get things going.
+I'm trying to make it feel as much like AS3 and C# as possible.
+
+The HTML is super minimal. It's not really HTML5 development. It's Javascript
+development. Which sucks, because Javascript is stupid.
+
+I made an Entity class. To see how to make your own classes, look at that file
+(entity.js). It's really dumb.
+
+I've put a bunch of comments in all the files, so hopefully it'll explain
+everything.
+
+If you don't know how to run the files within this IDE thing, just double-click
+the index.html file, and then click "Preview" on the upper toolbar. It should
+open a window on the right. In that window, you can just click the refresh
+button to see whatever changes you make.
+
+I think "Run" like... compiles it and looks for errors.
+
+~Chris

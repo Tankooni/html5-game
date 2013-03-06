@@ -1,0 +1,14 @@
+I took Chris's entity object, template function thingy,
+and added animation, also the cube is not mine :(
+Also thanks for all the comments Chris, super helpful!
+Also also, again this is my first time with a group,
+so any advice/pointers e.g. more/less comments is
+greatly appreciated!
+    -2/28/13 03:19am
+
+Trying to get collision to work, works in flash
+having some troubles here, going to work on it
+tomorrow morning.
+
+Thanks to Zack we have collision!!
+    -2/28/13 03:19am

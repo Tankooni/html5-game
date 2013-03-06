@@ -1,0 +1,4 @@
+{"ts":1362179296651,"silentsave":true,"restoring":false,"patch":[[]],"length":0}
+{"contributors":[],"silentsave":false,"ts":1362179318882,"patch":[[{"diffs":[[1,"I am adding a very basic sound manager type thing.\n\n(new Audio()).canPlayType(\"audio/ogg; codecs=vorbis\")"]],"start1":0,"start2":0,"length1":0,"length2":105}]],"length":105,"saved":false}
+{"contributors":[],"silentsave":false,"ts":1362286014643,"patch":[[{"diffs":[[0,"ng.\n"],[-1,"\n(new Audio()).canPlayType(\"audio/ogg; codecs=vorbis\")"],[1,"I made it play sound."]],"start1":47,"start2":47,"length1":58,"length2":25}]],"length":72,"saved":false}
+{"contributors":[],"silentsave":false,"ts":1362440924536,"patch":[[{"diffs":[[0,"y sound."],[1,"\n\n\n"]],"start1":64,"start2":64,"length1":8,"length2":11}]],"length":75,"saved":false}
