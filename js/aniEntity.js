@@ -9,12 +9,15 @@ function AnimatedEntity(imgFile, xIn, yIn, imageWidth, imageHeight, columnsIn, r
 	
     this.sourceRectangle = new Rectangle(0, 0, imageWidth, imageHeight);
     this.collisionRect = new Rectangle(xIn, yIn, imageWidth, imageHeight);
+    this.collisionCircle = new Circle(xIn + (imageWidth / 2), yIn + (imageHeight / 2), imageWidth / 2 );
     
 	var img = new Image();
 	img.src = imgFile;
 	
 	this.x = xIn;
 	this.y = yIn;
+    this.width = imageWidth;
+    this.height = imageHeight;
     
     //The row/column that the source rect is on, wasn't sure what to call them.
     this.spriteX = 0;
@@ -39,6 +42,9 @@ function AnimatedEntity(imgFile, xIn, yIn, imageWidth, imageHeight, columnsIn, r
         this.collisionRect.x = this.x;
         this.collisionRect.y = this.y;
         
+        this.collisionCircle.x = this.x + (imageWidth / 2);
+        this.collisionCircle.y = this.y + (imageHeight / 2);
+        
         // Purposely avoided using == since in js you use === and
         // that just makes me feel dirty.
         
@@ -59,16 +65,6 @@ function AnimatedEntity(imgFile, xIn, yIn, imageWidth, imageHeight, columnsIn, r
             this.spriteY = 0;
         }
         
-        // Trying to test collision
-        if(this.x < 150)
-        {
-            this.x += 1;
-        }
-        else if (this.x > 150)
-        {
-            this.x -= 1;
-        }
-        
 		this.sourceRectangle.x = this.sourceRectangle.width * this.spriteX;
         this.sourceRectangle.y = this.sourceRectangle.height * this.spriteY;
 	}
@@ -79,6 +75,12 @@ function AnimatedEntity(imgFile, xIn, yIn, imageWidth, imageHeight, columnsIn, r
         // The overloaded drawImage is kinda confusing since it has width and height twice, the first set
         // cuts the image and the last one sets the size you want the image to be... making them both the same gives
         // you a non-stretched image.
-		ctx.drawImage(img, this.sourceRectangle.x, this.sourceRectangle.y, this.sourceRectangle.width, this.sourceRectangle.height, this.x, this.y, this.sourceRectangle.width, this.sourceRectangle.height);
+        ctx.drawImage(img, this.sourceRectangle.x, this.sourceRectangle.y, this.sourceRectangle.width, this.sourceRectangle.height, this.x, this.y, this.sourceRectangle.width, this.sourceRectangle.height);
 	}
 }
+
+var AnimSprite = Entity.Extend({
+    
+});
+
+

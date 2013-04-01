@@ -1,4 +1,3 @@
-I am adding a very basic sound manager type thing.
-I made it play sound.
-
-
+Sound plays again.
+Next up, making it more usable.
+3/27/2013
