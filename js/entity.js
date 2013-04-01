@@ -2,9 +2,9 @@
 // Javascript is stupid
 
 // Think of this as our class definition and constructor in one
+
 function Entity(imgFile, xIn, yIn)
 {
-	/*******************************************************/
 	// Everything in this section can be compared to our init function (our constructor)
 	
 	// This is comparable to GraphicsDevice or SpriteBatch in XNA
@@ -17,7 +17,6 @@ function Entity(imgFile, xIn, yIn)
 	// X/Y position
 	var x = xIn;
 	var y = yIn;
-	/****************************************************/
 	
 	// Declare and define our update method. Yes, I do believe we have to do this
 	// just to declare a simple method. Javascript is stupid.
