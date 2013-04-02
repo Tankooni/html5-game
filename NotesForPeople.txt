@@ -1,0 +1,18 @@
+Associative Array Example
+    var myArray = {abc: 200, "x y z": 300};
+    
+    for(key in myArray)
+    {
+       alert("key " + key
+             + " has value "
+             + myArray[key]);
+    }
+
+Input examples
+    http://www.ibm.com/developerworks/web/library/wa-games/
+    
+Keyboard input no jquery
+    http://html5.litten.com/moving-shapes-on-the-html5-canvas-with-the-keyboard/
+    
+Pixel Detection
+    http://html5.litten.com/make-a-maze-game-on-an-html5-canvas/
