@@ -16,3 +16,11 @@ Keyboard input no jquery
     
 Pixel Detection
     http://html5.litten.com/make-a-maze-game-on-an-html5-canvas/
+
+box2d javascipt
+    http://code.google.com/p/box2dweb/
+    
+    
+    
+Ok so.
+We need to create a new buffer source every time we want to play a new sound.
