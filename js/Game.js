@@ -24,6 +24,7 @@ var rightArrow;
 var firstLevel;
 
 var testAudio = new Audio('lib/audio/bosh.wav');
+var musicPlayed = false;
 
 // This is called when the page loads
 function init()
@@ -33,7 +34,7 @@ function init()
     
 	canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
 	ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
-    audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav'], ['bosh','bi','flick']);
+    audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav','lib/audio/GalfSang.wav'], ['bosh','bi','flick','galf']);
     currentInputs = new Input(canvas);
     previousInputs = new Input(canvas);
     
@@ -48,7 +49,7 @@ function init()
     
     firstLevel = new Level();
     
-    firstLevel.lineArray.push(new Line(new Point(450, 0), new Point(0, 450)));
+    firstLevel.lineArray.push(new Line(new Point(0, 0), new Point(900, 0)));
     firstLevel.lineArray.push(new Line(new Point(900, 0), new Point(900, 900)));
     firstLevel.lineArray.push(new Line(new Point(900, 900), new Point(0, 900)));
     firstLevel.lineArray.push(new Line(new Point(0,0), new Point(900, 0)));
@@ -62,9 +63,11 @@ function init()
     
     launchBool = false;
     
-    golfBall = new Ball((canvas.width / 2) - 16, (canvas.height / 2) - 16);  
+    golfBall = new Ball(508, 801); 
     
 	setInterval(gameLoop, 1000 / FPS);
+    
+   // document.getElementById('header') = "";
 }
 
 // Our main program loop
@@ -74,6 +77,11 @@ function gameLoop()
 	// Keep update and draw separate
     if(audioManager.GetIsReady())
     {
+        if(!musicPlayed)
+        {
+            audioManager.PlayLoop('galf');
+            musicPlayed = true;
+        }
         Update();
         Draw();
     }
@@ -82,6 +90,13 @@ function gameLoop()
 function Update()
 {
     currentInputs.Update();
+    
+    if(currentInputs.mouseDown)
+    {
+        console.warn("Mouse X:" + currentInputs.mouseX);
+        console.warn("Mouse Y:" + currentInputs.mouseY);
+        
+    }
     
     mousePoint = new Point(currentInputs.mouseX, currentInputs.mouseY);
     
@@ -128,6 +143,14 @@ function Update()
             firstLevel.moveLeft();
             golfBall.x -= firstLevel.moveSpeed;
         }
+        if(currentInputs.spacePressed)
+        {
+            firstLevel.ZoomOut();
+            golfBall.ballSprite.width *= firstLevel.scale;
+            golfBall.ballSprite.height *= firstLevel.scale;
+            golfBall.x *= firstLevel.scale;
+            golfBall.y *= firstLevel.scale;
+        }
     }
     
     //Looking for intersection and the reflection vector
@@ -171,6 +194,7 @@ function Update()
             arrowPoint = boundingLines[l].FindIntersectionPoint(centerToBall);
             if(boundingLines[l].IsPointOnLine(arrowPoint) && centerToBall.IsPointOnLine(arrowPoint))
             {
+                //console.warn("Arrowpoint: " + arrowPoint.x + ", " + arrowPoint.y)
                 if(arrowPoint.y === 0)
                 {
                     topArrow.x = arrowPoint.x - 16;
@@ -228,6 +252,8 @@ function Update()
     golfBall.ApplyFriction();
     
     previousInputs.Update();
+    
+    //music.Play();
 }
 
 function Draw()
@@ -239,9 +265,11 @@ function Draw()
     
     //ctx.
     
+    firstLevel.Draw();
+    
     golfBall.Draw();
     golfBall.trajectoryLine.Draw();
-    firstLevel.Draw();
+    
     
     if(topArrow.isBeingDrawn)
     {

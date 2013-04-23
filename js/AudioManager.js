@@ -35,10 +35,11 @@ function AudioManager(sounds, soundsName)
     
     this.PlayLoop = function(song)
     {
-        if(this.currentMusic !== null)
-        {
-            
-        }
+        Sounds[song] = context.createBufferSource();
+        Sounds[song].buffer = buffers[song];
+        Sounds[song].loop = true;
+        Sounds[song].connect(context.destination);
+        Sounds[song].noteOn(0);
     }
     
     this.Play = function(sound)

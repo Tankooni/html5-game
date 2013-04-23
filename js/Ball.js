@@ -20,7 +20,7 @@ function Ball(xIn, yIn)
     this.mouseReleaseX = 0;
     this.mouseReleaseY = 0;
     
-    this.ballSprite = new Entity("lib/Untitled.jpg", this.x, this.y);
+    this.ballSprite = new Entity("lib/Untitled.jpg", this.x, this.y, 32, 32);
    
     this.dx = 0;
     this.dy = 0;
