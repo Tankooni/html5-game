@@ -1,4 +1,4 @@
-function Level()
+function Level1()
 {
     this.lineArray = [];
     
@@ -38,20 +38,22 @@ function Level()
     var background = new Entity("lib/New Canvas.jpg", 0, 0, 900, 900);
     var levelStarted = false;
     this.golfBall = null;
-    var endCircle = new Circle(368, 798, 16);
+    var endCircle = new Circle(390, 798, 16);
     
-    this.levelDone = false;
+    this.levelEnd = false;
     //lineArray.push(new Line(new Point(10, 50), new Point(50, 400)));
     
     this.Init = function()
     {
         console.error(this);
         this.golfBall = new Ball(508, 801);
+        this.levelEnd = false;
     }
     
     this.moveLeft = function()
     {
         background.x -= this.moveSpeed;
+        endCircle.x -= this.moveSpeed;
         this.golfBall.x -= this.moveSpeed;
         for(l in this.lineArray)
         {
@@ -64,6 +66,7 @@ function Level()
     this.moveRight = function()
     {
         background.x += this.moveSpeed;
+        endCircle.x += this.moveSpeed;
         this.golfBall.x += this.moveSpeed;
         for(l in this.lineArray)
         {
@@ -76,6 +79,7 @@ function Level()
     this.moveDown = function()
     {
         background.y += this.moveSpeed;
+        endCircle.y += this.moveSpeed;
         this.golfBall.y += this.moveSpeed;
         for(l in this.lineArray)
         {
@@ -88,6 +92,7 @@ function Level()
     this.moveUp = function()
     {
         background.y -= this.moveSpeed;
+        endCircle.y -= this.moveSpeed;
         this.golfBall.y -= this.moveSpeed;
         for(l in this.lineArray)
         {
@@ -158,19 +163,23 @@ function Level()
         if(endCircle.IntersectsCircle(this.golfBall.collisionCircle))
         {
             if(this.golfBall.dx <= 10 && this.golfBall.dy <= 10)
-                this.levelDone = true;
+                this.levelEnd = true;
         }
+        this.golfBall.ApplyForce();
+        this.golfBall.Update();
+        this.golfBall.ApplyFriction();
+        this.golfBall.UpdateTrajectory();
     }
     
-    this.Draw = function()
+    this.Draw = function(ctx)
     {
         background.Draw();
-        this.golfBall.Update();
-        this.golfBall.Draw();
+        ctx.fillStyle='000000';
         endCircle.Draw();
-        for(l in this.lineArray)
+        this.golfBall.Draw();
+        /*for(l in this.lineArray)
         {
                this.lineArray[l].Draw();
-        }
+        }*/
     }
 }
