@@ -21,6 +21,8 @@ var firstLevel;
 var musicPlayed = false;
 var levels = [];
 var levelIndex = 0;
+var startScreen;
+var loadText = 'Loading';
 
 // This is called when the page loads
 function init()
@@ -28,8 +30,9 @@ function init()
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     console.warn('Game Start');
     
-        canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
-        ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
+    canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
+    ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
+    ctx.font = "40pt Arial";
     audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav','lib/audio/GalfSang.wav'], ['bosh','bi','flick','galf']);
     currentInputs = new Input(canvas);
     previousInputs = new Input(canvas);
@@ -43,8 +46,11 @@ function init()
     rightArrow = new Entity("lib/RightArrow.jpg", 0, 0, 32, 32);
     rightArrow.isBeingDrawn = false;
     
-    firstLevel = new Level();
     
+    startScreen = new StartLevel();
+    firstLevel = new Level1();
+    
+    levels.push(startScreen);
     levels.push(firstLevel);
     
     levels[levelIndex].Init();
@@ -80,7 +86,15 @@ function gameLoop()
     }
     else
     {
+        if(loadText.length > 30)
+        {
+            loadText = 'Loading';
+        }
+        else
+            loadText += '.';
         
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillText(loadText, 50, 50);
     }
 }
 
@@ -140,31 +154,25 @@ function Update()
     
     var interSectionPoint;
     var numberOfLoops = 0;
-    do
+        
+    levels[levelIndex].golfBall.hadCollided = false;
+    for(var l in levels[levelIndex].lineArray)
     {
-        numberOfLoops++;
-        if(numberOfLoops > 8)
+        interSectionPoint = levels[levelIndex].lineArray[l].FindIntersectionPoint(levels[levelIndex].golfBall.trajectoryLine);
+        levels[levelIndex].golfBall.UpdateTrajectory();
+        if(levels[levelIndex].lineArray[l].IsPointOnLine(interSectionPoint) && levels[levelIndex].golfBall.trajectoryLine.IsPointOnLine(interSectionPoint))
         {
-            break;
+            console.warn(levels[levelIndex].golfBall.trajectoryLine);
+            levels[levelIndex].golfBall.x = interSectionPoint.x - levels[levelIndex].golfBall.radius;
+            levels[levelIndex].golfBall.y = interSectionPoint.y - levels[levelIndex].golfBall.radius;
+            var reflectVector = levels[levelIndex].lineArray[l].Reflect(new Point(levels[levelIndex].golfBall.dx, levels[levelIndex].golfBall.dy));
+            levels[levelIndex].golfBall.dx = reflectVector.x;
+            levels[levelIndex].golfBall.dy = reflectVector.y;
+            audioManager.Play('bi');
+            levels[levelIndex].golfBall.hadCollided = true;
         }
-        levels[levelIndex].golfBall.hadCollided = false;
-        for(var l in levels[levelIndex].lineArray)
-        {
-            interSectionPoint = levels[levelIndex].lineArray[l].FindIntersectionPoint(levels[levelIndex].golfBall.trajectoryLine);
-            if(levels[levelIndex].lineArray[l].IsPointOnLine(interSectionPoint) && levels[levelIndex].golfBall.trajectoryLine.IsPointOnLine(interSectionPoint))
-            {
-                levels[levelIndex].golfBall.x = interSectionPoint.x - levels[levelIndex].golfBall.radius;
-                levels[levelIndex].golfBall.y = interSectionPoint.y - levels[levelIndex].golfBall.radius;
-                var reflectVector = levels[levelIndex].lineArray[l].Reflect(new Point(levels[levelIndex].golfBall.dx, levels[levelIndex].golfBall.dy));
-                levels[levelIndex].golfBall.dx = reflectVector.x;
-                levels[levelIndex].golfBall.dy = reflectVector.y;
-                audioManager.Play('bi');
-                levels[levelIndex].golfBall.hadCollided = true;
-                levels[levelIndex].golfBall.UpdateTrajectory();
-            }
-        } // END
-    }
-    while(levels[levelIndex].golfBall.hadCollided === true)    
+    } // END
+        
     // Arrow Pointing Stuff
     if(levels[levelIndex].golfBall.centerPoint.x < -16 || levels[levelIndex].golfBall.centerPoint.x > 916 || levels[levelIndex].golfBall.centerPoint.y < -16 || levels[levelIndex].golfBall.centerPoint.y > 916)
     {
@@ -225,14 +233,16 @@ function Update()
     //    firstLevel.CenterOn(golfBall);
     //}
     
-
-    levels[levelIndex].golfBall.Update();
-    levels[levelIndex].golfBall.UpdateTrajectory();
+    //levels[levelIndex].golfBall.ApplyForce();
+    //levels[levelIndex].golfBall.Update();
+    //levels[levelIndex].golfBall.ApplyFriction();
+    //levels[levelIndex].golfBall.UpdateTrajectory(); // Should be in level update now
     
-    levels[levelIndex].golfBall.ApplyFriction();
-    
+    levels[levelIndex].Update();
+    console.warn(levels[levelIndex].levelEnd);
     if(levels[levelIndex].levelEnd)
     {
+        
         if(levelIndex < levels.length-1)
         {
             levelIndex++;
@@ -251,16 +261,15 @@ function Update()
 
 function Draw()
 {
-        // Clear the screen
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle='#6495ED';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Clear the screen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle='71B578';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     //ctx.
     
-    levels[levelIndex].Draw();
+    levels[levelIndex].Draw(ctx);
     
-    levels[levelIndex].golfBall.trajectoryLine.Draw();
     
     if(topArrow.isBeingDrawn)
     {

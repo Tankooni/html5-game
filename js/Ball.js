@@ -33,9 +33,6 @@ function Ball(xIn, yIn)
     
     this.Update = function Update()
     {
-        this.x += this.dx;
-        this.y += this.dy;
-        
         this.collisionCircle.x = this.x + this.radius;
         this.collisionCircle.y = this.y + this.radius;
         
@@ -44,6 +41,11 @@ function Ball(xIn, yIn)
         
         this.centerPoint = new Point(this.collisionCircle.x, this.collisionCircle.y);
         this.UpdateTrajectory();
+    }
+    this.ApplyForce = function()
+    {
+        this.x += this.dx;
+        this.y += this.dy;
     }
     this.UpdateTrajectory = function()
     {
@@ -81,7 +83,17 @@ function Ball(xIn, yIn)
     {
         this.dx = (this.mouseClickX - this.mouseReleaseX) / 2;
         this.dy = (this.mouseClickY - this.mouseReleaseY) / 2;
-        this.trajectoryLine = new Line(this.centerPoint, new Point(this.centerPoint.x + this.dx, this.centerPoint.y + this.dy))
+        var flingDist = Math.sqrt((this.mouseClickX - this.mouseReleaseX) * (this.mouseClickX - this.mouseReleaseX) + (this.mouseClickY - this.mouseReleaseY) * (this.mouseClickY - this.mouseReleaseY));
+        console.warn(flingDist);
+        if(flingDist > 125)
+        {
+            var angle = Math.atan2(this.mouseClickY - this.mouseReleaseY, this.mouseClickX - this.mouseReleaseX);
+            flingDist = 125;
+            this.dx = Math.cos(angle) * flingDist;
+            this.dy = Math.sin(angle) * flingDist;
+        }
+        console.warn(flingDist);
+        this.trajectoryLine = new Line(this.centerPoint, new Point(this.centerPoint.x + this.dx, this.centerPoint.y + this.dy));
     }
     
     this.Draw = function Draw()
