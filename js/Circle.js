@@ -49,7 +49,7 @@ function Circle(xIn, yIn, radiusIN)
     this.Draw = function()
     {
         ctx.beginPath();
-        ctx.arc(this.x-this.radius, this.y-this.radius, this.radius, 0, Math.PI*2, true); 
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true); 
         ctx.closePath();
         ctx.fill();
         

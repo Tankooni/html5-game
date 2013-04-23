@@ -48,6 +48,8 @@ function Ball(xIn, yIn)
     this.UpdateTrajectory = function()
     {
         this.trajectoryLine = new Line(this.centerPoint, new Point(this.centerPoint.x + this.dx, this.centerPoint.y + this.dy));
+        //console.log(this.trajectoryLine.point1);
+        //console.log(this.trajectoryLine.point2);
     }
     this.ApplyFriction = function ()
     {
