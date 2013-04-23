@@ -9,11 +9,6 @@ var currentInputs;
 var previousInputs;
 var mousePoint;
 
-var golfBall;
-
-var testLine;
-var testLine2;
-var lineList = [];
 var launchBool;
 var boundingLines = [];
 var topArrow;
@@ -23,8 +18,9 @@ var rightArrow;
 
 var firstLevel;
 
-var testAudio = new Audio('lib/audio/bosh.wav');
 var musicPlayed = false;
+var levels = [];
+var levelIndex = 0;
 
 // This is called when the page loads
 function init()
@@ -38,21 +34,18 @@ function init()
     currentInputs = new Input(canvas);
     previousInputs = new Input(canvas);
     
-    topArrow = new Entity("lib/UpArrow.jpg", 0, 0);
+    topArrow = new Entity("lib/UpArrow.jpg", 0, 0, 32, 32);
     topArrow.isBeingDrawn = false;
-    bottomArrow = new Entity("lib/DownArrow.jpg", 0, 0);
+    bottomArrow = new Entity("lib/DownArrow.jpg", 0, 0, 32, 32);
     bottomArrow.isBeingDrawn = false;
-    leftArrow = new Entity("lib/LeftArrow.jpg", 0, 0);
+    leftArrow = new Entity("lib/LeftArrow.jpg", 0, 0, 32, 32);
     leftArrow.isBeingDrawn = false;
-    rightArrow = new Entity("lib/RightArrow.jpg", 0, 0);
+    rightArrow = new Entity("lib/RightArrow.jpg", 0, 0, 32, 32);
     rightArrow.isBeingDrawn = false;
     
     firstLevel = new Level();
     
-    firstLevel.lineArray.push(new Line(new Point(0, 0), new Point(900, 0)));
-    firstLevel.lineArray.push(new Line(new Point(900, 0), new Point(900, 900)));
-    firstLevel.lineArray.push(new Line(new Point(900, 900), new Point(0, 900)));
-    firstLevel.lineArray.push(new Line(new Point(0,0), new Point(900, 0)));
+    levels.push(firstLevel);
     
     boundingLines.push(new Line(new Point(0, 0), new Point(0, 900)));
     boundingLines.push(new Line(new Point(900, 0), new Point(900, 900)));
@@ -62,8 +55,6 @@ function init()
     //lineList.push(testLine);
     
     launchBool = false;
-    
-    golfBall = new Ball(508, 801); 
     
 	setInterval(gameLoop, 1000 / FPS);
     
@@ -91,65 +82,51 @@ function Update()
 {
     currentInputs.Update();
     
-    if(currentInputs.mouseDown)
-    {
-        console.warn("Mouse X:" + currentInputs.mouseX);
-        console.warn("Mouse Y:" + currentInputs.mouseY);
-        
-    }
-    
     mousePoint = new Point(currentInputs.mouseX, currentInputs.mouseY);
     
-    if(golfBall.collisionCircle.IntersectsPoint(mousePoint))
+    if(currentInputs.mouseDown)
+    {
+        console.warn(mousePoint);
+    }
+    
+    if(levels[levelIndex].golfBall.collisionCircle.IntersectsPoint(mousePoint))
     {
         if(currentInputs.mouseDown && previousInputs.mouseDown === false)
         {
-            golfBall.Clicked(mousePoint);
+            levels[levelIndex].golfBall.Clicked(mousePoint);
             launchBool = true;
         }
     }
     
-    if(golfBall.isClicked)
+    if(levels[levelIndex].golfBall.isClicked)
     {
-        golfBall.Dragged(mousePoint);
+        levels[levelIndex].golfBall.Dragged(mousePoint);
         if(currentInputs.mouseDown === false && previousInputs.mouseDown)
         {
-            golfBall.Release(mousePoint);
-            golfBall.Launch();
+            levels[levelIndex].golfBall.Release(mousePoint);
+            levels[levelIndex].golfBall.Launch();
             audioManager.Play('flick');
             launchBool = false;
         }
     }
     
-    if(!(golfBall.isClicked))
+    if(!(levels[levelIndex].golfBall.isClicked))
     {
         if(currentInputs.upPressed || currentInputs.wPressed)
         {
-            firstLevel.moveDown();
-            golfBall.y += firstLevel.moveSpeed;
+            levels[levelIndex].moveDown();
         }
         if(currentInputs.downPressed || currentInputs.sDown)
         {   
-            firstLevel.moveUp();
-            golfBall.y -= firstLevel.moveSpeed;
+            levels[levelIndex].moveUp();
         }
         if(currentInputs.leftPressed || currentInputs.aPressed)
         {
-            firstLevel.moveRight();
-            golfBall.x += firstLevel.moveSpeed;
+            levels[levelIndex].moveRight();
         }
         if(currentInputs.rightPressed || currentInputs.dPressed)
         {
-            firstLevel.moveLeft();
-            golfBall.x -= firstLevel.moveSpeed;
-        }
-        if(currentInputs.spacePressed)
-        {
-            firstLevel.ZoomOut();
-            golfBall.ballSprite.width *= firstLevel.scale;
-            golfBall.ballSprite.height *= firstLevel.scale;
-            golfBall.x *= firstLevel.scale;
-            golfBall.y *= firstLevel.scale;
+            levels[levelIndex].moveLeft();
         }
     }
     
@@ -160,41 +137,38 @@ function Update()
     do
     {
         numberOfLoops++;
-        console.warn(numberOfLoops);
         if(numberOfLoops > 8)
         {
             break;
         }
-        golfBall.hadCollided = false;
-        for(var l in firstLevel.lineArray)
+        levels[levelIndex].golfBall.hadCollided = false;
+        for(var l in levels[levelIndex].lineArray)
         {
-            interSectionPoint = firstLevel.lineArray[l].FindIntersectionPoint(golfBall.trajectoryLine);
-            if(firstLevel.lineArray[l].IsPointOnLine(interSectionPoint) && golfBall.trajectoryLine.IsPointOnLine(interSectionPoint))
+            interSectionPoint = levels[levelIndex].lineArray[l].FindIntersectionPoint(levels[levelIndex].golfBall.trajectoryLine);
+            if(levels[levelIndex].lineArray[l].IsPointOnLine(interSectionPoint) && levels[levelIndex].golfBall.trajectoryLine.IsPointOnLine(interSectionPoint))
             {
-                golfBall.x = interSectionPoint.x - golfBall.radius;
-                golfBall.y = interSectionPoint.y - golfBall.radius;
-                var reflectVector = firstLevel.lineArray[l].Reflect(new Point(golfBall.dx, golfBall.dy));
-                golfBall.dx = reflectVector.x;
-                golfBall.dy = reflectVector.y;
+                levels[levelIndex].golfBall.x = interSectionPoint.x - levels[levelIndex].golfBall.radius;
+                levels[levelIndex].golfBall.y = interSectionPoint.y - levels[levelIndex].golfBall.radius;
+                var reflectVector = levels[levelIndex].lineArray[l].Reflect(new Point(levels[levelIndex].golfBall.dx, levels[levelIndex].golfBall.dy));
+                levels[levelIndex].golfBall.dx = reflectVector.x;
+                levels[levelIndex].golfBall.dy = reflectVector.y;
                 audioManager.Play('bi');
-                golfBall.hadCollided = true;
-                golfBall.UpdateTrajectory();
-                console.warn(l);
+                levels[levelIndex].golfBall.hadCollided = true;
+                levels[levelIndex].golfBall.UpdateTrajectory();
             }
         } // END
     }
-    while(golfBall.hadCollided === true)    
+    while(levels[levelIndex].golfBall.hadCollided === true)    
     // Arrow Pointing Stuff
-    if(golfBall.centerPoint.x < -16 || golfBall.centerPoint.x > 916 || golfBall.centerPoint.y < -16 || golfBall.centerPoint.y > 916)
+    if(levels[levelIndex].golfBall.centerPoint.x < -16 || levels[levelIndex].golfBall.centerPoint.x > 916 || levels[levelIndex].golfBall.centerPoint.y < -16 || levels[levelIndex].golfBall.centerPoint.y > 916)
     {
         var arrowPoint = new Point(0,0);
-        var centerToBall = new Line(golfBall.centerPoint, new Point(450, 450));
+        var centerToBall = new Line(levels[levelIndex].golfBall.centerPoint, new Point(450, 450));
         for(var l in boundingLines)
         {
             arrowPoint = boundingLines[l].FindIntersectionPoint(centerToBall);
             if(boundingLines[l].IsPointOnLine(arrowPoint) && centerToBall.IsPointOnLine(arrowPoint))
             {
-                //console.warn("Arrowpoint: " + arrowPoint.x + ", " + arrowPoint.y)
                 if(arrowPoint.y === 0)
                 {
                     topArrow.x = arrowPoint.x - 16;
@@ -234,11 +208,11 @@ function Update()
     
     if(currentInputs.debugOn) //Simply stops the ball and moves it to the cursor
     {
-        golfBall.x = mousePoint.x - 16;
-        golfBall.y = mousePoint.y - 16;
-        golfBall.dx = 0;
-        golfBall.dy = 0;
-        golfBall.hadCollided = false;
+        levels[levelIndex].golfBall.x = mousePoint.x - 16;
+        levels[levelIndex].golfBall.y = mousePoint.y - 16;
+        levels[levelIndex].golfBall.dx = 0;
+        levels[levelIndex].golfBall.dy = 0;
+        levels[levelIndex].golfBall.hadCollided = false;
     }
     //if(currentInputs.spacePressed) // This can be used to center yourself on the ball but it breaks more than it helps
     //{
@@ -246,10 +220,10 @@ function Update()
     //}
     
 
-        golfBall.Update();
-    golfBall.UpdateTrajectory();
+    levels[levelIndex].golfBall.Update();
+    levels[levelIndex].golfBall.UpdateTrajectory();
     
-    golfBall.ApplyFriction();
+    levels[levelIndex].golfBall.ApplyFriction();
     
     previousInputs.Update();
     
@@ -265,11 +239,9 @@ function Draw()
     
     //ctx.
     
-    firstLevel.Draw();
+    levels[levelIndex].Draw();
     
-    golfBall.Draw();
-    golfBall.trajectoryLine.Draw();
-    
+    levels[levelIndex].golfBall.trajectoryLine.Draw();
     
     if(topArrow.isBeingDrawn)
     {
@@ -291,7 +263,7 @@ function Draw()
     if(launchBool)
     {
         ctx.beginPath();
-        ctx.moveTo(golfBall.x + golfBall.radius, golfBall.y + golfBall.radius);
+        ctx.moveTo(levels[levelIndex].golfBall.x + levels[levelIndex].golfBall.radius, levels[levelIndex].golfBall.y + levels[levelIndex].golfBall.radius);
         ctx.lineTo(mousePoint.x, mousePoint.y);
         ctx.stroke();
     }

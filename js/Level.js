@@ -2,11 +2,14 @@ function Level()
 {
     this.lineArray = [];
     
+    this.lineArray.push(new Line(new Point(0, 0), new Point(900, 0)));
+    this.lineArray.push(new Line(new Point(900, 0), new Point(900, 900)));
+    this.lineArray.push(new Line(new Point(900, 900), new Point(0, 900)));
+    this.lineArray.push(new Line(new Point(0,0), new Point(900, 0)));
     this.lineArray.push(new Line(new Point(449, 846), new Point(451, 742)));
     this.lineArray.push(new Line(new Point(840, 826), new Point(449, 846)));
     this.lineArray.push(new Line(new Point(451, 742), new Point(570, 744)));
     this.lineArray.push(new Line(new Point(570, 744), new Point(731, 579)));
-    //this.lineArray.push(new Line(new Point(840, 826), new Point(875, 322)));
     this.lineArray.push(new Line(new Point(840, 826), new Point(875, 722)));
     this.lineArray.push(new Line(new Point(875, 722), new Point(867, 531)));
     this.lineArray.push(new Line(new Point(867, 531), new Point(876, 322)));
@@ -33,13 +36,16 @@ function Level()
     this.scale = 1;
     
     var background = new Entity("lib/New Canvas.jpg", 0, 0, 900, 900);
-    
+    var levelStarted = false;
+    this.golfBall = new Ball(508, 801);
+    var endCircle = new Circle(368 + 16, 798 + 16, 16);
     
     //lineArray.push(new Line(new Point(10, 50), new Point(50, 400)));
     
     this.moveLeft = function()
     {
         background.x -= this.moveSpeed;
+        this.golfBall.x -= this.moveSpeed;
         for(l in this.lineArray)
         {
                this.lineArray[l].point1.x -= this.moveSpeed;
@@ -51,6 +57,7 @@ function Level()
     this.moveRight = function()
     {
         background.x += this.moveSpeed;
+        this.golfBall.x += this.moveSpeed;
         for(l in this.lineArray)
         {
                this.lineArray[l].point1.x += this.moveSpeed;
@@ -62,6 +69,7 @@ function Level()
     this.moveDown = function()
     {
         background.y += this.moveSpeed;
+        this.golfBall.y += this.moveSpeed;
         for(l in this.lineArray)
         {
                this.lineArray[l].point1.y += this.moveSpeed;
@@ -73,6 +81,7 @@ function Level()
     this.moveUp = function()
     {
         background.y -= this.moveSpeed;
+        this.golfBall.y -= this.moveSpeed;
         for(l in this.lineArray)
         {
                this.lineArray[l].point1.y -= this.moveSpeed;
@@ -140,7 +149,9 @@ function Level()
     this.Draw = function()
     {
         background.Draw();
-        
+        this.golfBall.Update();
+        this.golfBall.Draw();
+        endCircle.Draw();
         for(l in this.lineArray)
         {
                this.lineArray[l].Draw();

@@ -1,6 +1,7 @@
  // Simple Rectangle used for the source and collision rectangle
 function Circle(xIn, yIn, radiusIN)
 {
+    var ctx = document.getElementById('canvas').getContext('2d');
     this.x = xIn;
     this.y = yIn;
     this.radius = radiusIN;
@@ -44,6 +45,16 @@ function Circle(xIn, yIn, radiusIN)
         {
             return false;
         }
+    }
+    this.Draw = function()
+    {
+        ctx.beginPath();
+        ctx.arc(this.x-this.radius, this.y-this.radius, this.radius, 0, Math.PI*2, true); 
+        ctx.closePath();
+        ctx.fill();
+        
+        //ctx.circle(this.x, this.y, distance/2,0,Math.PI*2 ,true);
+        //ctx.stroke();
     }
 }
 
