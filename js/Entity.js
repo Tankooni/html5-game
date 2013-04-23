@@ -3,7 +3,7 @@
 
 // Think of this as our class definition and constructor in one
 
-function Entity(imgFile, xIn, yIn)
+function Entity(imgFile, xIn, yIn, widthIn, heightIn)
 {
 	// Everything in this section can be compared to our init function (our constructor)
 	
@@ -17,7 +17,10 @@ function Entity(imgFile, xIn, yIn)
 	// X/Y position
 	this.x = xIn;
 	this.y = yIn;
-	
+    this.width = widthIn;
+    this.height = heightIn;
+    this.scale = 1;
+    
 	// Declare and define our update method. Yes, I do believe we have to do this
 	// just to declare a simple method. Javascript is stupid.
 	this.Update = function()
@@ -29,6 +32,6 @@ function Entity(imgFile, xIn, yIn)
 	this.Draw = Draw;
 	function Draw()
 	{
-		ctx.drawImage(img, this.x, this.y);
+		ctx.drawImage(img, this.x, this.y, this.width * this.scale, this.height * this.scale);
 	}
 }
