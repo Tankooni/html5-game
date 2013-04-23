@@ -1,7 +1,7 @@
-const FPS = 30;			// Used later, in the game loop
-var canvas = null;		// This references an HTML element
-var ctx = null;			// From what I've done so far, it looks like this is used for drawing
-window.onload = init;	// Function to call when the window loads
+const FPS = 30;                 // Used later, in the game loop
+var canvas = null;              // This references an HTML element
+var ctx = null;                 // From what I've done so far, it looks like this is used for drawing
+window.onload = init;   // Function to call when the window loads
 
 // Game variables
 var audioManager;
@@ -28,8 +28,8 @@ function init()
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     console.warn('Game Start');
     
-	canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
-	ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
+        canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
+        ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
     audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav','lib/audio/GalfSang.wav'], ['bosh','bi','flick','galf']);
     currentInputs = new Input(canvas);
     previousInputs = new Input(canvas);
@@ -47,6 +47,8 @@ function init()
     
     levels.push(firstLevel);
     
+    levels[levelIndex].Init();
+    
     boundingLines.push(new Line(new Point(0, 0), new Point(0, 900)));
     boundingLines.push(new Line(new Point(900, 0), new Point(900, 900)));
     boundingLines.push(new Line(new Point(900, 900), new Point(0, 900)));
@@ -56,7 +58,7 @@ function init()
     
     launchBool = false;
     
-	setInterval(gameLoop, 1000 / FPS);
+        setInterval(gameLoop, 1000 / FPS);
     
    // document.getElementById('header') = "";
 }
@@ -65,7 +67,7 @@ function init()
 function gameLoop()
 {
     //audio.playSound();
-	// Keep update and draw separate
+        // Keep update and draw separate
     if(audioManager.GetIsReady())
     {
         if(!musicPlayed)
@@ -75,6 +77,10 @@ function gameLoop()
         }
         Update();
         Draw();
+    }
+    else
+    {
+        
     }
 }
 
@@ -225,6 +231,19 @@ function Update()
     
     levels[levelIndex].golfBall.ApplyFriction();
     
+    if(levels[levelIndex].levelEnd)
+    {
+        if(levelIndex < levels.length-1)
+        {
+            levelIndex++;
+        }
+        else
+        {
+            levelIndex = 0;
+        }
+        levels[levelIndex].Init();
+    }
+    
     previousInputs.Update();
     
     //music.Play();
@@ -232,10 +251,10 @@ function Update()
 
 function Draw()
 {
-	// Clear the screen
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Clear the screen
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle='#6495ED';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     //ctx.
     

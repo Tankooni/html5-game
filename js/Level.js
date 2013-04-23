@@ -37,10 +37,17 @@ function Level()
     
     var background = new Entity("lib/New Canvas.jpg", 0, 0, 900, 900);
     var levelStarted = false;
-    this.golfBall = new Ball(508, 801);
-    var endCircle = new Circle(368 + 16, 798 + 16, 16);
+    this.golfBall = null;
+    var endCircle = new Circle(368, 798, 16);
     
+    this.levelDone = false;
     //lineArray.push(new Line(new Point(10, 50), new Point(50, 400)));
+    
+    this.Init = function()
+    {
+        console.error(this);
+        this.golfBall = new Ball(508, 801);
+    }
     
     this.moveLeft = function()
     {
@@ -143,6 +150,15 @@ function Level()
                 this.moveDown();
                 centerOn.y += this.moveSpeed;
             }
+        }
+    }
+    
+    this.Update = function()
+    {
+        if(endCircle.IntersectsCircle(this.golfBall.collisionCircle))
+        {
+            if(this.golfBall.dx <= 10 && this.golfBall.dy <= 10)
+                this.levelDone = true;
         }
     }
     
