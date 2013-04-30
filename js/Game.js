@@ -33,7 +33,7 @@ function init()
     canvas = document.getElementById('canvas'); // Get the HTML element with the ID of 'canvas'
     ctx = canvas.getContext('2d'); // This is necessary, but I don't know exactly what it does
     ctx.font = "40pt Arial";
-    audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav','lib/audio/GalfSang.wav'], ['bosh','bi','flick','galf']);
+    audioManager = new AudioManager(['lib/audio/bosh.wav','lib/audio/bi.wav','lib/audio/flick.wav','lib/audio/GalfSang 2.mp3'], ['bosh','bi','flick','galf']);
     currentInputs = new Input(canvas);
     previousInputs = new Input(canvas);
     
